@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste com Claude</title>
+</head>
+<body>
+  <h1>Enviar mensagem para Claude (Anthropic)</h1>
+  <textarea id="prompt" rows="5" cols="60" placeholder="Digite aqui..."></textarea><br>
+  <button onclick="enviarPrompt()">Enviar</button>
+  <pre id="resposta"></pre>
+
+  <script>
+    async function enviarPrompt() {
+      const prompt = document.getElementById('prompt').value;
+      const resposta = document.getElementById('resposta');
+
+      resposta.textContent = 'Carregando...';
+
+      try {
+        const res = await fetch('/.netlify/functions/clause-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await res.json();
+        resposta.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resposta.textContent = 'Erro: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
